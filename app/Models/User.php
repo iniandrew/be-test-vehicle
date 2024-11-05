@@ -20,7 +20,7 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable;
 
     protected $connection = 'mongodb';
-    protected $table = 'users';
+    protected string $collection = 'users';
 
     /**
      * The attributes that are mass assignable.
