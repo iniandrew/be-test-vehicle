@@ -7,7 +7,7 @@ use App\Models\User;
 class AuthRepository
 {
     public function __construct(
-        protected User $user
+        protected User $model
     ) { }
 
     /**
@@ -18,7 +18,7 @@ class AuthRepository
      */
     public function create(array $data): User
     {
-        $model = $this->user->newQuery()->create($data);
+        $model = $this->model->newQuery()->create($data);
         return $model->fresh();
     }
 
@@ -30,6 +30,6 @@ class AuthRepository
      */
     public function findByEmail(string $email): ?User
     {
-        return $this->user->newQuery()->where('email', $email)->first();
+        return $this->model->newQuery()->where('email', $email)->first();
     }
 }
