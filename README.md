@@ -12,7 +12,6 @@ So, if you want to test the API using postman, you can import this file:
 - [Installation Guide](#installation-guide)
   - [Setup without Docker](#setup-without-docker)
   - [Setup using Docker](#setup-using-docker)
-  - [Postman Collection](#api-collection)
 
 ## Installation Guide
 
@@ -147,6 +146,5 @@ docker compose exec -it app php artisan db:seed
 > ```
 > then
 > ```
-> cd ../ && chown -R sail:sail html
-> ```
+> chown -R sail:sail /var/www/html
 
