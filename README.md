@@ -1,66 +1,148 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Junior BE Test - Andrew
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> Disclaimer: I've been asked to Mrs. Evy to using another laravel and mongodb version, and she allowed me to use the another version.
 
-## About Laravel
+I've been deploying this project to my server, you can access the project using the following link: [https://api.govomoon.com/](https://api.govomoon.com/)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Table of Contents
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Installation Guide](#installation-guide)
+  - [Setup without Docker](#setup-without-docker)
+  - [Setup using Docker](#setup-using-docker)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+## Installation Guide
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+first clone the repository using the following command:
+```bash
+git clone https://github.com/iniandrew/be-test-vehicle.git
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+then, open the project folder
+```bash
+cd be-test-vehicle
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Setup without Docker
 
-## Laravel Sponsors
+Because the project is using mongodb, you need to install mongodb on your local machine. You can follow the installation guide [here](https://docs.mongodb.com/manual/installation/)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Before we can install the MongoDB libraries for Laravel, we need to install the PHP extension for MongoDB. Run the following command:
 
-### Premium Partners
+```bash
+sudo pecl install mongodb
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+You will also need to ensure that the mongodb extension is enabled in your php.ini file. The location of your php.ini file will vary depending on your operating system. Add the following line to your php.ini file:
 
-## Contributing
+`extension="mongodb.so"`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+After that follow the following steps:
 
-## Code of Conduct
+1. Copy the environment file
+```bash
+cp .env.example .env
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+After copying the environment file, you need to update the following variables in the `.env` file:
 
-## Security Vulnerabilities
+If you want to connect using the mongodb uri, uncomment the following line
+```
+# DB_URI=
+# DB_DATABASE=laravel
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you want to connect using the host, port, database, username, and password, uncomment the following lines
+```
+# DB_HOST=127.0.0.1
+# DB_PORT=27017
+# DB_DATABASE=laravel
+# DB_USERNAME=
+# DB_PASSWORD=
+```
 
-## License
+adjust the values according to your mongodb configuration.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+2. Install the dependencies
+```bash
+composer install
+```
+
+3. Generate the application key
+```bash
+php artisan key:generate
+```
+
+4. Generate the JWT secret
+```bash
+php artisan jwt:secret
+```
+
+5. If you want to seed the database with dummy data, run the following command:
+```bash
+php artisan db:seed
+```
+
+6. Run the application
+```bash
+php artisan serve
+```
+
+
+### Setup using Docker
+
+Install Docker and Docker Compose on your local machine. You can follow the installation guide [here](https://docs.docker.com/get-docker/)
+
+First, copy the environment file
+```bash
+  cp .env.docker .env
+```
+
+I have created a bash script to make it easier to install the project using docker. You can run the following command:
+```bash
+chmod +x ./install.sh &&
+./install.sh
+```
+
+If you want to install the project manually, follow the following steps:
+
+1. Run the docker container
+```bash
+docker compose up -d --build
+```
+
+2. Install the dependencies
+```bash
+docker compose exec -it app composer install
+```
+
+> After installing the dependencies, you can replace `docker compose exec -it app` with `./vendor/bin/sail` if you want to run the command using sail.
+
+3. Generate the application key
+```bash
+docker compose exec -it app php artisan key:generate
+```
+
+4. Generate the JWT secret
+```bash
+docker compose exec -it app php artisan jwt:secret
+```
+
+If you want to seed the database with dummy data, run the following command:
+```bash
+docker compose exec -it app php artisan db:seed
+```
+
+> Note:
+> 
+> If you encounter an error like this when running the application using docker:
+> `file_put_contents(/var/www/html/storage/framework/views/**.php): Failed to open stream: Permission denied`
+> 
+> You can run the following command:
+> ```
+> ./vendor/bin/sail root-shell
+> ```
+> then
+> ```
+> cd ../ && chown -R sail:sail html
+> ```
