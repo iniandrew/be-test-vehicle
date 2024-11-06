@@ -9,13 +9,13 @@ class ApiResponse
     /**
      * @param array|null $data
      * @param int $statusCode
-     * @param string $message
+     * @param string|null $message
      * @return JsonResponse
      */
     public static function successResponse(
         ?array $data,
-        int    $statusCode,
-        string $message
+        int    $statusCode = 200,
+        ?string $message = 'Success'
     ): JsonResponse {
         $response = [
             'rc' => $statusCode,
@@ -37,7 +37,7 @@ class ApiResponse
      */
     public static function errorResponse(
         string $message,
-        int $statusCode = 400
+        int $statusCode = 500
     ): JsonResponse {
         return new JsonResponse([
             'rc' => $statusCode,
