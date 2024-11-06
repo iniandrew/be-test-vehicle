@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests\Vehicle;
 
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Requests\BaseRequest;
 
-class SellVehicleRequest extends FormRequest
+class SellVehicleRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,14 +24,5 @@ class SellVehicleRequest extends FormRequest
         return [
             'quantity' => 'required',
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'status'   => 'error',
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ], 400));
     }
 }
