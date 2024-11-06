@@ -586,6 +586,41 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Specific Vehicle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bearerToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/vehicles/{{vehicleId}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"vehicles",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
