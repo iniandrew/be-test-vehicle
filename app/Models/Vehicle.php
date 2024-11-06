@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Eloquent\Model;
 
 /**
@@ -14,6 +15,7 @@ use MongoDB\Laravel\Eloquent\Model;
  */
 class Vehicle extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'year_of_manufacture',
         'engine',
