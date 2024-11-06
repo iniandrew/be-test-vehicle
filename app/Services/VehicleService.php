@@ -48,7 +48,7 @@ class VehicleService
     {
         $vehicle = $this->getVehicleById($id);
 
-        return $this->vehicleRepository->update($vehicle, $data);
+        return $this->vehicleRepository->update($vehicle->id, $data);
     }
 
     public function deleteVehicle(string $id): bool

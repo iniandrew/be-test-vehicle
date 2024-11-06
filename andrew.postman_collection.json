@@ -62,7 +62,9 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									""
+									"const responseJson = pm.response.json();",
+									"    const { data } = responseJson;",
+									"pm.environment.set('bearerToken', data.access_token);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -109,7 +111,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGcOiJInUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3MzA0NzQyNjQsImV4cCI6MTczMDQ3Nzg2NCwibmJmIjoxNzMwNDc0MjY0LCJqdGkiOiI3d1A3eDMzb2Vxd2pXSW92Iiwic3ViIjoiNjcyNGYxMTUyZTEzMTA1NGVkMDk0ODYyIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.QzEeUDtaz5w4vUjceeqjZZ_AavnRx4BBI23t2ikIjRk",
+									"value": "{{bearerToken}}",
 									"type": "string"
 								}
 							]
@@ -122,15 +124,6 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"andrew@mail.com\",\n    \"password\": \"password\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/auth/logout",
 							"host": [
@@ -221,6 +214,20 @@
 				},
 				{
 					"name": "Create New Car",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseJson = pm.response.json();",
+									"    const { data } = responseJson;",
+									"pm.environment.set('vehicleId', data.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -242,7 +249,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"year_of_manufacture\": 2018,\n    \"color\": \"Black Metalic\",\n    \"price\": 100000000,\n    \"stock\": 100\n}",
+							"raw": "{\n    \"year_of_manufacture\": 2018,\n    \"color\": \"Black Metalic\",\n    \"price\": 100000000,\n    \"stock\": 100,\n    \"type\": \"car\",\n    \"engine\": \"Diesel\",\n    \"passenger_capacity\": 5,\n    \"car_type\": \"SUV\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -373,7 +380,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"year_of_manufacture\": 2018,\n    \"color\": \"Black Metalic\",\n    \"price\": 100000000,\n    \"stock\": 100,\n    \"type\": \"motorcycle\",\n    \"engine\": \"2 Tak\",\n    \"passenger_capacity\": 5,\n    \"car_type\": \"SUV\",\n    \"suspension_type\": \"pler\",\n    \"transmission_type\": \"pler\"\n}",
+							"raw": "{\n    \"year_of_manufacture\": 2018,\n    \"color\": \"Black Metalic di Edit\",\n    \"price\": 100000000,\n    \"stock\": 100,\n    \"type\": \"motorcycle\",\n    \"engine\": \"2 Tak\",\n    \"suspension_type\": \"Suspension di Edit\",\n    \"transmission_type\": \"Transmission di Edit\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -476,50 +483,6 @@
 					"response": []
 				},
 				{
-					"name": "Update Vehicle",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{bearerToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"year_of_manufacture\": 2019,\n    \"color\": \"Black Metalic\",\n    \"price\": 100000000,\n    \"stock\": 100,\n    \"type\": \"motorcycle\",\n    \"engine\": \"2 Tak\",\n    \"passenger_capacity\": 5,\n    \"car_type\": \"SUV\",\n    \"suspension_type\": \"pler\",\n    \"transmission_type\": \"pler\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/vehicles/{{vehicleId}}",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"vehicles",
-								"{{vehicleId}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Delete Vehicle",
 					"request": {
 						"auth": {
@@ -612,14 +575,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/api/vehicles/transactions",
+							"raw": "{{BASE_URL}}/api/sales",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"vehicles",
-								"transactions"
+								"sales"
 							]
 						}
 					},
