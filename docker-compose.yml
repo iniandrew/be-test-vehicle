@@ -1,5 +1,6 @@
 services:
     laravel.test:
+        container_name: 'app'
         build:
             context: './docker/8.3'
             dockerfile: Dockerfile
@@ -24,6 +25,7 @@ services:
         depends_on:
             - mongo
     mongo:
+        container_name: 'mongodb'
         image: 'mongo:latest'
         restart: always
         command:
