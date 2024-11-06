@@ -26,7 +26,8 @@ class VehicleController extends Controller
             $vehicles = $this->vehicleService->getAllVehicle();
 
             return ApiResponse::successResponse(
-                $vehicles->toArray() ?: ['vehicles' => []],
+                $vehicles->toArray(),
+                $vehicles->isEmpty() ? 204 : 200
             );
         } catch (\Exception $e) {
             return ApiResponse::errorResponse($e->getMessage());
@@ -137,6 +138,7 @@ class VehicleController extends Controller
             $transactions = $this->transactionService->getAllVehicleTransactions();
             return ApiResponse::successResponse(
                 $transactions->toArray(),
+                $transactions->isEmpty() ? 204 : 200
             );
         } catch (\Exception $e) {
             return ApiResponse::errorResponse($e->getMessage());

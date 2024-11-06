@@ -18,7 +18,7 @@ class ApiResponse
         ?string $message = 'Success'
     ): JsonResponse {
         $response = [
-            'rc' => $statusCode,
+            'code' => $statusCode,
             'status' => 'success',
             'message' => $message
         ];
@@ -40,7 +40,7 @@ class ApiResponse
         int $statusCode = 500
     ): JsonResponse {
         return new JsonResponse([
-            'rc' => $statusCode,
+            'code' => $statusCode,
             'status' => 'error',
             'message' => $message
         ], $statusCode);
