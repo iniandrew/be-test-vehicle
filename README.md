@@ -4,12 +4,15 @@
 
 I've been deploying this project to my server, you can access the project using the following link: [https://api.govomoon.com/](https://api.govomoon.com/)
 
+So, if you want to test the API using postman, you can import this file:
+`andrew.postman_collection.json` and `andrew.postman.environment.json` to your postman application.
+
 ## Table of Contents
 
 - [Installation Guide](#installation-guide)
   - [Setup without Docker](#setup-without-docker)
   - [Setup using Docker](#setup-using-docker)
-
+  - [Postman Collection](#api-collection)
 
 ## Installation Guide
 
@@ -88,7 +91,6 @@ php artisan db:seed
 php artisan serve
 ```
 
-
 ### Setup using Docker
 
 Install Docker and Docker Compose on your local machine. You can follow the installation guide [here](https://docs.docker.com/get-docker/)
@@ -133,6 +135,7 @@ If you want to seed the database with dummy data, run the following command:
 docker compose exec -it app php artisan db:seed
 ```
 
+
 > Note:
 > 
 > If you encounter an error like this when running the application using docker:
@@ -146,3 +149,4 @@ docker compose exec -it app php artisan db:seed
 > ```
 > cd ../ && chown -R sail:sail html
 > ```
+
