@@ -98,7 +98,7 @@ it('can view sales report by specific vehicle', function () {
 
     $result = $this->transactionService->getSalesReport($vehicleId);
     expect($result['vehicle']->id)->toBe($vehicleId)
-        ->and($result['total_sold'])->toBe($totalSold)
+        ->and($result['total_sales'])->toBe($totalSold)
         ->and($result['total_revenue'])->toBe($totalRevenue);
 });
 

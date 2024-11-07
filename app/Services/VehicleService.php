@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
+use App\Exceptions\ApiException;
 use App\Models\Vehicle;
 use App\Repositories\VehicleRepository;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class VehicleService
 {
@@ -13,48 +14,82 @@ class VehicleService
         protected VehicleRepository $vehicleRepository
     ) { }
 
+    /**
+     * @return Collection
+     * @throws ApiException
+     */
     public function getAllVehicle(): Collection
     {
-        return $this->vehicleRepository->getAll();
-    }
-
-    public function getVehicleById(string $id): Vehicle
-    {
-        $vehicle = $this->vehicleRepository->findById($id);
-
-        if (!$vehicle) {
-            throw new NotFoundHttpException('Vehicle not found');
+        try {
+            return $this->vehicleRepository->getAll();
+        } catch (\Exception $e) {
+            throw new ApiException($e->getMessage());
         }
-
-        return $vehicle;
     }
 
     /**
+     * @param string $id
+     * @return Vehicle
+     * @throws ApiException
+     */
+    public function getVehicleById(string $id): Vehicle
+    {
+        return $this->vehicleRepository->findById($id)
+            ?: throw new ApiException('Vehicle not found', Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @param array $data
      * @throws \Exception
+     * @return Vehicle
      */
     public function createVehicle(array $data): Vehicle
     {
-        return $this->vehicleRepository->create($data);
+        try {
+            return $this->vehicleRepository->create($data);
+        } catch (\Exception $e) {
+            throw new ApiException($e->getMessage());
+        }
     }
 
+    /**
+     * @param string $id
+     * @throws ApiException
+     * @return int
+     */
     public function getVehicleStock(string $id): int
     {
-        $vehicle = $this->getVehicleById($id);
-
-        return $vehicle->stock;
+        return $this->getVehicleById($id)->stock;
     }
 
+    /**
+     * @param string $id
+     * @param array $data
+     * @throws ApiException
+     * @return Vehicle
+     */
     public function updateVehicle(string $id, array $data): Vehicle
     {
-        $vehicle = $this->getVehicleById($id);
-
-        return $this->vehicleRepository->update($vehicle->id, $data);
+        try {
+            $vehicle = $this->getVehicleById($id);
+            return $this->vehicleRepository->update($vehicle->id, $data);
+        } catch (\Exception $e) {
+            throw new ApiException($e->getMessage(), $e->getCode());
+        }
     }
 
+    /**
+     * @param string $id
+     * @throws ApiException
+     * @return bool
+     */
     public function deleteVehicle(string $id): bool
     {
-        $vehicle = $this->getVehicleById($id);
-
-        return $this->vehicleRepository->delete($vehicle->id);
+        try {
+            $vehicle = $this->getVehicleById($id);
+            return $this->vehicleRepository->delete($vehicle->id);
+        } catch (\Exception $e) {
+            throw new ApiException($e->getMessage(), $e->getCode());
+        }
     }
 }

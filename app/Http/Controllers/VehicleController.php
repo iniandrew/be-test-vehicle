@@ -8,7 +8,7 @@ use App\Http\Responses\ApiResponse;
 use App\Services\VehicleService;
 use App\Services\VehicleTransactionService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class VehicleController extends Controller
 {
@@ -22,28 +22,26 @@ class VehicleController extends Controller
      */
     public function index(): JsonResponse
     {
-        try {
+        return $this->handleApiResponse(function () {
             $vehicles = $this->vehicleService->getAllVehicle();
 
             return ApiResponse::successResponse(
                 $vehicles->toArray(),
-                $vehicles->isEmpty() ? 204 : 200
+                $vehicles->isEmpty()
+                    ? Response::HTTP_NO_CONTENT
+                    : Response::HTTP_OK
             );
-        } catch (\Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+        });
     }
 
     public function checkStock(string $id): JsonResponse
     {
-        try {
+        return $this->handleApiResponse(function () use ($id) {
             $stock = $this->vehicleService->getVehicleStock($id);
             return ApiResponse::successResponse(
                 ['stock' => $stock],
             );
-        } catch (\Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+        });
     }
 
     /**
@@ -51,16 +49,15 @@ class VehicleController extends Controller
      */
     public function store(VehicleRequest $request): JsonResponse
     {
-        try {
+        return $this->handleApiResponse(function () use ($request) {
             $vehicle = $this->vehicleService->createVehicle($request->validated());
+
             return ApiResponse::successResponse(
                 $vehicle->toArray(),
-                201,
+                Response::HTTP_CREATED,
                 'Vehicle created successfully'
             );
-        } catch (\Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+        });
     }
 
     /**
@@ -68,31 +65,26 @@ class VehicleController extends Controller
      */
     public function show(string $id): JsonResponse
     {
-        try {
+        return $this->handleApiResponse(function () use ($id) {
             $vehicle = $this->vehicleService->getVehicleById($id);
-            return ApiResponse::successResponse(
-                $vehicle->toArray(),
-            );
-        } catch (\Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+            return ApiResponse::successResponse($vehicle->toArray());
+        });
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): JsonResponse
+    public function update(VehicleRequest $request, string $id): JsonResponse
     {
-        try {
-            $vehicle = $this->vehicleService->updateVehicle($id, $request->all());
+        return $this->handleApiResponse(function () use ($request, $id) {
+            $vehicle = $this->vehicleService->updateVehicle($id, $request->validated());
+
             return ApiResponse::successResponse(
                 $vehicle->toArray(),
-                200,
+                Response::HTTP_OK,
                 'Vehicle updated successfully'
             );
-        } catch (\Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+        });
     }
 
     /**
@@ -101,12 +93,10 @@ class VehicleController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        try {
+        return $this->handleApiResponse(function () use ($id) {
             $this->vehicleService->deleteVehicle($id);
-            return ApiResponse::successResponse([], 200, 'Vehicle deleted successfully');
-        } catch (\Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+            return ApiResponse::successResponse([], Response::HTTP_OK, 'Vehicle deleted successfully');
+        });
     }
 
     /**
@@ -116,16 +106,15 @@ class VehicleController extends Controller
      */
     public function sell(SellVehicleRequest $request, string $id): JsonResponse
     {
-        try {
+        return $this->handleApiResponse(function () use ($request, $id) {
             $transaction = $this->transactionService->checkout($id, $request->input('quantity'));
+
             return ApiResponse::successResponse(
                 $transaction->toArray(),
-                201,
-                'Transaction created successfully'
+                Response::HTTP_CREATED,
+                'Vehicle sold successfully'
             );
-        } catch (\Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+        });
     }
 
     /**
@@ -134,15 +123,16 @@ class VehicleController extends Controller
      */
     public function sales(): JsonResponse
     {
-        try {
+        return $this->handleApiResponse(function () {
             $transactions = $this->transactionService->getAllVehicleTransactions();
+
             return ApiResponse::successResponse(
                 $transactions->toArray(),
-                $transactions->isEmpty() ? 204 : 200
+                $transactions->isEmpty()
+                    ? Response::HTTP_NO_CONTENT
+                    : Response::HTTP_OK
             );
-        } catch (\Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+        });
     }
 
     /**
@@ -152,13 +142,9 @@ class VehicleController extends Controller
      */
     public function salesReport(string $id): JsonResponse
     {
-        try {
+        return $this->handleApiResponse(function () use ($id) {
             $report = $this->transactionService->getSalesReport($id);
-            return ApiResponse::successResponse(
-                $report,
-            );
-        } catch (\Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+            return ApiResponse::successResponse($report);
+        });
     }
 }

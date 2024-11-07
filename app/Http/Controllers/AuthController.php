@@ -7,7 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Responses\ApiResponse;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
-use Exception;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -15,50 +15,36 @@ class AuthController extends Controller
         protected AuthService $authService
     ) {}
 
-    /**
-     * @throws Exception
-     */
     public function store(RegisterRequest $request): JsonResponse
     {
-        try {
+        return $this->handleApiResponse(function () use ($request) {
             $user = $this->authService->register($request->validated());
-            return ApiResponse::successResponse($user->toArray(), 201, 'User registered successfully');
-        } catch (Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+            return ApiResponse::successResponse($user->toArray(), Response::HTTP_CREATED, 'User registered successfully');
+        });
     }
 
-    /**
-     * @throws Exception
-     */
     public function login(LoginRequest $request): JsonResponse
     {
-        try {
-            $token = $this->authService->login($request->only('email', 'password'));
-            return ApiResponse::successResponse($this->tokenResponse($token), 200, 'User logged in successfully');
-        } catch (Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+        return $this->handleApiResponse(function () use ($request) {
+            $token = $this->authService->login($request->validated());
+            return ApiResponse::successResponse($this->tokenResponse($token), Response::HTTP_OK, 'User logged in successfully');
+        });
     }
 
     public function logout(): JsonResponse
     {
-        try {
+        return $this->handleApiResponse(function () {
             $this->authService->logout();
-            return ApiResponse::successResponse([], 200, 'User logged out successfully');
-        } catch (Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+            return ApiResponse::successResponse([], Response::HTTP_OK, 'User logged out successfully');
+        });
     }
 
     public function refresh(): JsonResponse
     {
-        try {
+        return $this->handleApiResponse(function () {
             $token = $this->authService->refresh();
-            return ApiResponse::successResponse($this->tokenResponse($token), 200, 'Token refreshed successfully');
-        } catch (Exception $e) {
-            return ApiResponse::errorResponse($e->getMessage());
-        }
+            return ApiResponse::successResponse($this->tokenResponse($token), Response::HTTP_OK, 'Token refreshed successfully');
+        });
     }
 
     private function tokenResponse($token): array

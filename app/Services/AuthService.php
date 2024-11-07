@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
+use App\Exceptions\ApiException;
 use App\Models\User;
 use App\Repositories\AuthRepository;
-use Exception;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -18,68 +19,64 @@ class AuthService
     /**
      * @param array $data
      * @return User
-     * @throws Exception
+     * @throws ApiException
      */
     public function register(array $data): User
     {
         try {
             $data['password'] = Hash::make($data['password']);
             return $this->authRepository->create($data);
-        } catch (Exception $e) {
-            throw new \Exception('Error registering user: ' . $e->getMessage(), 500);
+        } catch (\Exception $e) {
+            throw new ApiException($e->getMessage());
         }
     }
 
     /**
      * @param array $data
-     * @return string|\Exception
-     * @throws Exception
+     * @return string
+     * @throws ApiException
      */
-    public function login(array $data): string|\Exception
+    public function login(array $data): string
     {
         try {
             $user = $this->authRepository->findByEmail($data['email']);
 
             if (!$user) {
-                throw new \Exception('User not found', 404);
+                throw new ApiException('User not found', Response::HTTP_NOT_FOUND);
             }
 
             if (!Hash::check($data['password'], $user->password)) {
-                throw new \Exception('Invalid credentials', 401);
+                throw new ApiException('Invalid credentials', Response::HTTP_UNAUTHORIZED);
             }
 
             return JWTAuth::fromUser($user);
         } catch (JWTException $e) {
-            throw new Exception('Could not create token', 500);
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage(), 500);
+            throw new ApiException($e->getMessage());
         }
     }
 
     /**
-     * @throws Exception
-     * @return array
+     * @throws ApiException
      */
-    public function logout(): array
+    public function logout()
     {
         try {
-            JWTAuth::invalidate(JWTAuth::getToken());
-            return ['message' => 'User logged out successfully'];
-        } catch (Exception $e) {
-            throw new \Exception($e->getMessage(), 500);
+            return JWTAuth::invalidate(JWTAuth::getToken());
+        } catch (\Exception $e) {
+            throw new ApiException($e->getMessage());
         }
     }
 
     /**
-     * @throws Exception
+     * @throws ApiException
      * @return string
      */
     public function refresh(): string
     {
         try {
             return JWTAuth::refresh(JWTAuth::getToken());
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage(), 500);
+        } catch (\Exception $e) {
+            throw new ApiException($e->getMessage());
         }
     }
 
