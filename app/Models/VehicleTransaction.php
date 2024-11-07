@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use MongoDB\Laravel\Eloquent\Model;
 
 /**
@@ -12,6 +13,8 @@ use MongoDB\Laravel\Eloquent\Model;
  */
 class VehicleTransaction extends Model
 {
+    use HasFactory;
+
     protected $connection = 'mongodb';
     protected string $collection = 'vehicle_transactions';
 

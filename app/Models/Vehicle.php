@@ -15,6 +15,8 @@ use MongoDB\Laravel\Eloquent\Model;
  */
 class Vehicle extends Model
 {
+    protected $connection = 'mongodb';
+
     use HasFactory;
     protected $fillable = [
         'year_of_manufacture',

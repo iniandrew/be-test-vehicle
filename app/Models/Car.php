@@ -10,7 +10,7 @@ use App\Enums\VehicleType;
  */
 class Car extends Vehicle
 {
-    protected string $collection = 'vehicles';
+    protected string $collection = 'cars';
 
     public function __construct(array $attributes = [])
     {
